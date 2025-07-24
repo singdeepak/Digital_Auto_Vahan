@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\RequestDetail;
 use Illuminate\Database\Eloquent\Model;
 
 class RequestModel extends Model

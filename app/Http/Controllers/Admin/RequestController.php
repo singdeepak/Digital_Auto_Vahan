@@ -8,8 +8,9 @@ use App\Models\RequestModel;
 use Illuminate\Http\Request;
 use App\Models\RequestDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use LynX39\LaraPdfMerger\Facades\PdfMerger;
 
@@ -203,16 +204,19 @@ class RequestController extends Controller
 
     public function downloadPDF($id)
     {
-        $request = RequestModel::with('detail')->findOrFail($id);
+        $requestData = RequestModel::select('requests.*')
+         ->with('detail')
+         ->findOrFail($id);
 
         // Generate dynamic PDF
         $dynamicPath = storage_path("app/dynamic_request_{$id}.pdf");
-        Pdf::loadView('admin.pdf.request', compact('request'))
+        Pdf::loadView('admin.pdf.request', ['requestData' => $requestData])
         ->setPaper('a4', 'portrait')
         ->save($dynamicPath);
 
+
         // Get existing uploaded PDF
-        $filename = $request->detail->document;
+        $filename = $requestData->detail->document;
         $uploadPdfPath = public_path("uploads/documents/{$filename}");
         if (!file_exists($uploadPdfPath)) {
             abort(404, 'Uploaded PDF not found.');
@@ -222,7 +226,7 @@ class RequestController extends Controller
         $pdfMerger = PdfMerger::init();
         $pdfMerger->addPDF($dynamicPath, 'all');
         $pdfMerger->addPDF($uploadPdfPath, 'all');
-        $pdfMerger->merge(); // combine all
-        $pdfMerger->save("combined_{$request->reg_number}.pdf", "download");
+        $pdfMerger->merge(); 
+        $pdfMerger->save("hardcopy_of_{$requestData->reg_number}.pdf", "download");
     }
 }
