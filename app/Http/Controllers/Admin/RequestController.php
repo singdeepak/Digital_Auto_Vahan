@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Fop;
 use App\Models\Client;
-use Barryvdh\DomPDF\PDF;
 use App\Models\RequestModel;
 use Illuminate\Http\Request;
+use App\Models\RequestDetail;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Validator;
+use LynX39\LaraPdfMerger\Facades\PdfMerger;
 
 class RequestController extends Controller
 {
@@ -67,11 +70,9 @@ class RequestController extends Controller
     }
 
 
-    public function editRequest($id){
-        $clients = Client::get();
-        $fops = Fop::get();
+    public function editRequestDetails($id){
         $req = RequestModel::findOrFail($id);
-        return view('admin.request.edit', compact('req', 'clients', 'fops'));
+        return view('admin.request.edit', compact('req'));
     }
 
     public function updateRequest(Request $request)
@@ -94,11 +95,134 @@ class RequestController extends Controller
         return view('admin.request.completed', compact('completedRequests'));
     }
 
+
+    public function storeRequestDetails(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'reg_number'               => 'required|exists:requests,reg_number',
+            'old_reg_number'           => 'required|string',
+            'reg_state'                => 'required|string',
+            'reg_office'               => 'required|string',
+            'fitness_valid_upto'       => 'required|date',
+            'registration_valid_upto'  => 'required|date',
+
+            // Finance
+            'financer'                 => 'required|string',
+
+            // Owner
+            'owner_name'               => 'required|string',
+            'swdo_of'                  => 'required|string',
+            'ownership_serial'         => 'required|string',
+            'mobile_number'            => 'required|string|regex:/^[0-9]{10}$/',
+            'current_address'          => 'required|string',
+            'permanent_address'        => 'required|string',
+
+            // Vehicle Info
+            'maker'                    => 'required|string',
+            'model'                    => 'required|string',
+            'vehicle_class'            => 'required|string',
+            'vehicle_category'         => 'required|string',
+            'emission_norms'           => 'required|string',
+            'chassis_number'           => 'required|string',
+            'engine_number'            => 'required|string',
+            'seating_capacity'         => 'required|integer|min:0',
+            'standing_capacity'        => 'required|integer|min:0',
+            'sleeper_capacity'         => 'required|integer|min:0',
+            'number_of_cylinders'      => 'required|integer|min:0',
+            'unladen_weight'           => 'required|integer|min:0',
+            'laden_weight'             => 'required|integer|min:0',
+            'fuel'                     => 'required|string',
+            'color'                    => 'required|string',
+            'wheelbase'                => 'required|integer|min:0',
+            'cubic_capacity'           => 'required|integer|min:0',
+            'manufacture_month_year'   => 'required|string',
+            'body_type'                => 'required|string',
+
+            // NOC
+            'noc_number'               => 'required|string',
+            'noc_issue_date'           => 'required|date',
+
+            // Insurance
+            'insurance_type'           => 'required|string',
+            'insurance_company'        => 'required|string',
+            'insurance_policy_number'  => 'required|string',
+            'insurance_from_date'      => 'required|date',
+            'insurance_to_date'        => 'required|date',
+
+            // PUCC
+            'pucc_number'              => 'required|string',
+            'pucc_form'                => 'required|string',
+            'pucc_upto'                => 'required|date',
+
+            // Permit
+            'permit_number'            => 'required|string',
+            'permit_type'              => 'required|string',
+            'permit_valid_from'        => 'required|date',
+            'permit_valid_upto'        => 'required|date',
+
+            // Tax
+            'tax_type'                 => 'required|string',
+            'tax_amount'               => 'required|numeric|min:0',
+            'tax_from'                 => 'required|date',
+            'tax_upto'                 => 'required|date',
+
+            // PDF upload
+            'document'                 => 'nullable|mimes:pdf|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $requestDetails = new RequestDetail();
+        $requestDetails->request_id = $id;
+
+        // Assign all fields
+        $fields = $validator->validated();
+        foreach ($fields as $key => $value) {
+            $requestDetails->$key = $value;
+        }
+
+        // Handle document upload
+        if ($request->hasFile('document')) {
+            $file = $request->file('document');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/documents'), $filename);
+            $requestDetails->document = $filename;
+        }
+
+        $requestDetails->save();
+        $changeStatus = RequestModel::findOrFail($id);
+        $changeStatus->status = 'completed';
+        $changeStatus->save();
+
+        return redirect()->route('request.completed')->with('success', 'Request details saved successfully.');
+    }
+
+
+
     public function downloadPDF($id)
     {
-        $request = RequestModel::findOrFail($id);
-        $pdf = app('dompdf.wrapper');
-        $pdf->loadView('admin.pdf.request', compact('request'));
-        return $pdf->download('request-details.pdf');
+        $request = RequestModel::with('detail')->findOrFail($id);
+
+        // Generate dynamic PDF
+        $dynamicPath = storage_path("app/dynamic_request_{$id}.pdf");
+        Pdf::loadView('admin.pdf.request', compact('request'))
+        ->setPaper('a4', 'portrait')
+        ->save($dynamicPath);
+
+        // Get existing uploaded PDF
+        $filename = $request->detail->document;
+        $uploadPdfPath = public_path("uploads/documents/{$filename}");
+        if (!file_exists($uploadPdfPath)) {
+            abort(404, 'Uploaded PDF not found.');
+        }
+
+        // Merge PDFs using correct method names
+        $pdfMerger = PdfMerger::init();
+        $pdfMerger->addPDF($dynamicPath, 'all');
+        $pdfMerger->addPDF($uploadPdfPath, 'all');
+        $pdfMerger->merge(); // combine all
+        $pdfMerger->save("combined_{$request->reg_number}.pdf", "download");
     }
 }

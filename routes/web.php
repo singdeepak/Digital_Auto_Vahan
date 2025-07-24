@@ -28,8 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::post('admin/requests/assign/{id}', [RequestController::class, 'assign'])->name('request.assign');
     Route::get('admin/requests/assigned', [RequestController::class, 'fetchAllAssignedRequest'])->name('request.fetch');
     Route::get('admin/requests/completed',[RequestController::class, 'completed'])->name('request.completed');
-    Route::get('admin/request/edit/{id}', [RequestController::class, 'editRequest'])->name('request.edit');
-    Route::put('/admin/request/update/{id}', [RequestController::class, 'updateRequest'])->name('request.update');
+    Route::get('/admin/requests/{id}/edit-details', [RequestController::class, 'editRequestDetails'])->name('admin.request.details.edit');
+    Route::post('/admin/requests/{id}/store-details', [RequestController::class, 'storeRequestDetails'])->name('admin.request.details.store');
 
     Route::get('/admin/requests/download/{id}', [RequestController::class, 'downloadPDF'])->name('request.download');
 

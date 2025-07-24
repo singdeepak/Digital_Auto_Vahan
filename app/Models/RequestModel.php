@@ -11,4 +11,9 @@ class RequestModel extends Model
     protected $casts = [
         'request_date' => 'datetime:d M Y, h:i A',
     ];
+
+    public function detail()
+    {
+        return $this->hasOne(RequestDetail::class, 'request_id', 'id');
+    }
 }

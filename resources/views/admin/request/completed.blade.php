@@ -3,10 +3,6 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-4">Completed Requests</h1>
 
-@if(session('success'))
-  <div class="alert alert-success">{{ session('success') }}</div>
-@endif
-
 <table class="table-auto w-full border-collapse">
   <thead>
     <tr class="bg-gray-100">
@@ -31,7 +27,7 @@
         <td class="px-4 py-2 border">
             <form action="{{ route('request.download', ['id' => $req->id]) }}" method="GET">
                 <button type="submit"
-                class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded">
+                class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded cursor-pointer">
                 <i class="fa-solid fa-download"></i> PDF Download
                 </button>
             </form>

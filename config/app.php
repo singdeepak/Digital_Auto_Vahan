@@ -15,6 +15,9 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -66,7 +69,6 @@ return [
     */
 
     'timezone' => 'Asia/Kolkata',
-    'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
 
 
     /*

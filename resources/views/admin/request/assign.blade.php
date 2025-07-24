@@ -29,12 +29,9 @@
         <td class="px-4 py-2 border">{{ $req->request_date->format('d M Y, h:i A') }}</td>
         <td class="px-4 py-2 border">{{ ucfirst($req->status) }}</td>
         <td class="px-4 py-2 border">
-            <form action="{{ route('request.edit', ['id' => $req->id]) }}" method="GET">
-                <button type="submit"
-                class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded">
-                <i class="fa-solid fa-pen-to-square"></i> Edit
-                </button>
-            </form>
+            <a href="{{ route('admin.request.details.edit', $req->id) }}" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded">
+              <i class="fa-solid fa-pen-to-square"></i> Edit
+            </a>
         </td>
 
       </tr>
