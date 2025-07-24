@@ -135,7 +135,7 @@ class RequestController extends Controller
             'fuel'                     => 'required|string',
             'color'                    => 'required|string',
             'wheelbase'                => 'required|integer|min:0',
-            'cubic_capacity'           => 'required|integer|min:0',
+            'cubic_capacity'           => 'required|numeric|min:0',
             'manufacture_month_year'   => 'required|string',
             'body_type'                => 'required|string',
 
