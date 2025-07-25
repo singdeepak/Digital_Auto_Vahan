@@ -3,10 +3,6 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-4">All Requests</h1>
 
-@if(session('success'))
-  <div class="alert alert-success">{{ session('success') }}</div>
-@endif
-
 <table class="table-auto w-full border-collapse">
   <thead>
     <tr class="bg-gray-100">
@@ -43,9 +39,6 @@
     @endif
   </tbody>
 </table>
-
-
-
 @endsection
 
 

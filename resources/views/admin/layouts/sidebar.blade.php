@@ -1,7 +1,10 @@
-<aside class="w-74 h-screen bg-indigo-600 shadow-lg text-white flex flex-col">
-  <div class="p-6 font-bold text-2xl tracking-wide text-red-900">
-    Digital Auto Vahan
-  </div>
+<aside class="w-84 h-screen bg-indigo-600 shadow-lg text-white flex flex-col">
+  <div class="bg-blue-900 py-2 px-4 mb-8 rounded-lg shadow-lg">
+  <h1 class="text-white text-2xl sm:text-2xl font-extrabold tracking-wider">
+    DIGITAL AUTO VAHAN
+  </h1>
+</div>
+
   <nav class="mt-4 flex-1 space-y-1 overflow-y-auto">
     <a href="{{ route('admin.dashboard') }}"
        @class([
@@ -64,6 +67,19 @@
       <i class="fas fa-check-circle text-lg"></i>
       <span class="flex-1">Completed</span>
       @if(request()->routeIs('request.completed'))
+        <span class="w-1 h-6 bg-white rounded-r-full"></span>
+      @endif
+    </a>
+
+    <a href="{{ route('client.index') }}"
+       @class([
+         'flex items-center gap-3 px-4 py-2 rounded-lg transition-colors duration-200',
+         'bg-indigo-500' => request()->routeIs('client.index'),
+         'hover:bg-indigo-500' => !request()->routeIs('client.index')
+       ])>
+      <i class="fas fa-user-circle text-lg"></i>
+      <span class="flex-1">Client</span>
+      @if(request()->routeIs('client.index'))
         <span class="w-1 h-6 bg-white rounded-r-full"></span>
       @endif
     </a>

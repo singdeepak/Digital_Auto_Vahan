@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\RequestController;
 
 
@@ -32,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/requests/{id}/store-details', [RequestController::class, 'storeRequestDetails'])->name('admin.request.details.store');
 
     Route::get('/admin/requests/download/{id}', [RequestController::class, 'downloadPDF'])->name('request.download');
+
+    Route::resource('client', ClientController::class);
 
 });
 

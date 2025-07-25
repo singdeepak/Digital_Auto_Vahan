@@ -330,7 +330,6 @@
 @endsection
 
 @push('script')
-  <!-- Make sure jQuery and jQuery Validation are loaded -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
   
@@ -350,7 +349,6 @@
 
   <script>
     $(document).ready(function () {
-      // Debug: Check if jQuery and validation plugin are loaded
       console.log('jQuery version:', $.fn.jquery);
       console.log('jQuery validate available:', typeof $.fn.validate);
       console.log('Form found:', $('#editRequestForm').length);
@@ -379,7 +377,7 @@
 
       // Initialize form validation
       const validator = $('#editRequestForm').validate({
-        ignore: [], // Don't ignore any fields
+        ignore: [], 
         
         rules: {
           // Registration Information - Based on PDF: PB01A6691

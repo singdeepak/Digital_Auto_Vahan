@@ -1,6 +1,6 @@
-<header class="w-full bg-indigo-600 text-white p-4 flex items-center justify-between shadow-md">
+<header class="w-full bg-indigo-600 text-white p-3 flex items-center justify-between shadow-md">
   <div>
-    <img src="{{ asset('logo.jpg') }}" alt="Digital Auto – Vahan" class="w-32 h-16 object-contain">
+    <img src="{{ asset('logo.jpg') }}" alt="Digital Auto – Vahan" class="w-62 h-20 object-contain">
   </div>
 
 
