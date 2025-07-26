@@ -17,7 +17,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="flex flex-col min-h-screen bg-gray-200">
+<body class="flex flex-col min-h-screen ">
 
   <!-- Success Message Alert -->
   @if(session('success'))
@@ -53,7 +53,7 @@
   @include('admin.layouts.header')
   
   <!-- Main Content Area -->
-  <div class="flex flex-1 bg-white-900">
+  <div class="flex flex-1">
     @include('admin.layouts.sidebar')
     <main class="flex-1 overflow-auto">
       <div class="p-6">

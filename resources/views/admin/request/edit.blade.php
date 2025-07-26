@@ -14,18 +14,21 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @php
               $regFields = [
-                'reg_number' => ['label' => 'Registration Number', 'type' => 'text'],
-                'old_reg_number' => ['label' => 'Old Registration Number', 'type' => 'text'],
-                'reg_state' => ['label' => 'Registration State', 'type' => 'text'],
-                'reg_office' => ['label' => 'Registration Office', 'type' => 'text'],
-                'fitness_valid_upto' => ['label' => 'Registration Fitness Valid Upto', 'type' => 'date'],
-                'registration_valid_upto' => ['label' => 'Registration Valid Upto', 'type' => 'date']
+                'reg_number' => ['label' => 'Registration Number', 'type' => 'text', 'required' => true],
+                'old_reg_number' => ['label' => 'Old Registration Number', 'type' => 'text', 'required' => false],
+                'reg_state' => ['label' => 'Registration State', 'type' => 'text', 'required' => true],
+                'reg_office' => ['label' => 'Registration Office', 'type' => 'text', 'required' => true],
+                'fitness_valid_upto' => ['label' => 'Registration Fitness Valid Upto', 'type' => 'date', 'required' => false],
+                'registration_valid_upto' => ['label' => 'Registration Valid Upto', 'type' => 'date', 'required' => false]
               ];
             @endphp
            @foreach ($regFields as $field => $config)
             <div>
               <label for="{{ $field }}" class="block text-sm font-semibold text-gray-700">
-                {{ $config['label'] }} <span class="text-red-500">*</span>
+                {{ $config['label'] }}
+                @if ($config['required'])
+                  <span class="text-red-500">*</span>
+                @endif
               </label>
 
               @if ($field === 'reg_number')
@@ -52,6 +55,7 @@
               @enderror
             </div>
           @endforeach
+
 
           </div>
         </div>
@@ -133,7 +137,10 @@
             @foreach ($vehicleFields as $field => $config)
               <div>
                 <label for="{{ $field }}" class="block text-sm font-semibold text-gray-700">
-                  {{ $config['label'] }} <span class="text-red-500">*</span>
+                  {{ $config['label'] }}
+                  @if ($field !== 'manufacture_month_year')
+                    <span class="text-red-500">*</span>
+                  @endif
                 </label>
                 <input type="{{ $config['type'] }}" name="{{ $field }}" id="{{ $field }}"
                       value="{{ old($field, $req->$field) }}"
@@ -160,7 +167,7 @@
             @foreach ($nocFields as $field => $config)
               <div>
                 <label for="{{ $field }}" class="block text-sm font-semibold text-gray-700">
-                  {{ $config['label'] }} <span class="text-red-500">*</span>
+                  {{ $config['label'] }}
                 </label>
                 <input type="{{ $config['type'] }}" 
                       name="{{ $field }}" id="{{ $field }}"
@@ -190,7 +197,10 @@
             @foreach ($insFields as $field => $config)
               <div>
                 <label for="{{ $field }}" class="block text-sm font-semibold text-gray-700">
-                  {{ $config['label'] }} <span class="text-red-500">*</span>
+                  {{ $config['label'] }}
+                  @if ($config['type'] !== 'date')
+                    <span class="text-red-500">*</span>
+                  @endif
                 </label>
                 <input type="{{ $config['type'] }}" 
                       name="{{ $field }}" id="{{ $field }}"
@@ -218,7 +228,10 @@
             @foreach ($puccFields as $field => $config)
               <div>
                 <label for="{{ $field }}" class="block text-sm font-semibold text-gray-700">
-                  {{ $config['label'] }} <span class="text-red-500">*</span>
+                  {{ $config['label'] }}
+                  @if ($config['type'] !== 'date')
+                    <span class="text-red-500">*</span>
+                  @endif
                 </label>
                 <input type="{{ $config['type'] }}"
                       name="{{ $field }}" id="{{ $field }}"
@@ -247,7 +260,7 @@
             @foreach ($permitFields as $field => $config)
               <div>
                 <label for="{{ $field }}" class="block text-sm font-semibold text-gray-700">
-                  {{ $config['label'] }} <span class="text-red-500">*</span>
+                  {{ $config['label'] }}
                 </label>
                 <input type="{{ $config['type'] }}"
                       name="{{ $field }}" id="{{ $field }}"
@@ -276,7 +289,7 @@
             @foreach ($taxFields as $field => $config)
               <div>
                 <label for="{{ $field }}" class="block text-sm font-semibold text-gray-700">
-                  {{ $config['label'] }} <span class="text-red-500">*</span>
+                  {{ $config['label'] }}
                 </label>
                 <input type="{{ $config['type'] }}"
                       name="{{ $field }}" id="{{ $field }}"
@@ -382,7 +395,7 @@
         rules: {
           // Registration Information - Based on PDF: PB01A6691
           old_reg_number: { 
-            required: true,
+            required: false,
             minlength: 8,
             maxlength: 15,
             pattern: /^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$/
@@ -398,11 +411,11 @@
             maxlength: 100
           },
           fitness_valid_upto: { 
-            required: true, 
+            required: false, 
             date: true 
           },
           registration_valid_upto: { 
-            required: true, 
+            required: false, 
             date: true 
           },
 
@@ -547,7 +560,7 @@
             max: 10000
           },
           manufacture_month_year: { 
-            required: true 
+            required: false 
           },
           body_type: { 
             required: true,
@@ -555,14 +568,14 @@
             maxlength: 50
           },
 
-          // NOC Information
+          // NOC Information - Removed required rules
           noc_number: { 
-            required: true,
+            required: false,
             minlength: 5,
             maxlength: 50
           },
           noc_issue_date: { 
-            required: true, 
+            required: false, 
             date: true 
           },
 
@@ -584,11 +597,11 @@
             pattern: "^[A-Z0-9/]+$"
           },
           insurance_from_date: { 
-            required: true, 
+            required: false, 
             date: true 
           },
           insurance_to_date: { 
-            required: true, 
+            required: false, 
             date: true 
           },
 
@@ -600,54 +613,54 @@
             pattern: /^[A-Z]{2}[0-9]+$/
           },
           pucc_form: { 
-            required: true,
+            required: false,
             minlength: 2,
             maxlength: 20
           },
           pucc_upto: { 
-            required: true, 
+            required: false, 
             date: true 
           },
 
-          // Permit Information - Based on PDF: PB2022-AITP-5646A
+          // Permit Information - Removed required rules
           permit_number: { 
-            required: true,
+            required: false,
             minlength: 10,
             maxlength: 50,
             pattern: /^[A-Z]{2}[0-9]{4}-[A-Z]+-[0-9A-Z]+$/
           },
           permit_type: { 
-            required: true,
+            required: false,
             minlength: 5,
             maxlength: 50
           },
           permit_valid_from: { 
-            required: true, 
+            required: false, 
             date: true 
           },
           permit_valid_upto: { 
-            required: true, 
+            required: false, 
             date: true 
           },
 
-          // Tax Information
+          // Tax Information - Removed required rules
           tax_type: { 
-            required: true,
+            required: false,
             minlength: 3,
             maxlength: 50
           },
           tax_amount: { 
-            required: true, 
+            required: false, 
             number: true, 
             min: 1,
             max: 999999
           },
           tax_from: { 
-            required: true, 
+            required: false, 
             date: true 
           },
           tax_upto: { 
-            required: true, 
+            required: false, 
             date: true 
           },
 
@@ -734,15 +747,29 @@
             pattern: "Invalid PUCC number format (e.g., HR06200590010086)"
           },
           
-          // Permit Information
-          permit_number: {
-            required: "Permit number is required",
-            pattern: "Invalid permit number format (e.g., PB2022-AITP-5646A)"
+          // NOC Information - Removed required messages
+          noc_number: {
+            minlength: "NOC number must be at least 5 characters",
+            maxlength: "NOC number cannot exceed 50 characters"
           },
           
-          // Tax Information
+          // Permit Information - Removed required messages
+          permit_number: {
+            minlength: "Permit number must be at least 10 characters",
+            pattern: "Invalid permit number format (e.g., PB2022-AITP-5646A)"
+          },
+          permit_type: {
+            minlength: "Permit type must be at least 5 characters",
+            maxlength: "Permit type cannot exceed 50 characters"
+          },
+          
+          // Tax Information - Removed required messages
+          tax_type: {
+            minlength: "Tax type must be at least 3 characters",
+            maxlength: "Tax type cannot exceed 50 characters"
+          },
           tax_amount: {
-            required: "Tax amount is required",
+            number: "Tax amount must be a valid number",
             min: "Tax amount must be at least ₹1",
             max: "Tax amount cannot exceed ₹9,99,999"
           },

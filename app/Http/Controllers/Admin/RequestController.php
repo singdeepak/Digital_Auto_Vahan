@@ -101,11 +101,11 @@ class RequestController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'reg_number'               => 'required|exists:requests,reg_number',
-            'old_reg_number'           => 'required|string',
+            'old_reg_number'           => 'nullable|string',  // Removed required
             'reg_state'                => 'required|string',
             'reg_office'               => 'required|string',
-            'fitness_valid_upto'       => 'required|date',
-            'registration_valid_upto'  => 'required|date',
+            'fitness_valid_upto'       => 'nullable|date',    // Removed required (was already nullable)
+            'registration_valid_upto'  => 'nullable|date',    // Removed required (was already nullable)
 
             // Finance
             'financer'                 => 'required|string',
@@ -136,36 +136,36 @@ class RequestController extends Controller
             'color'                    => 'required|string',
             'wheelbase'                => 'required|integer|min:0',
             'cubic_capacity'           => 'required|numeric|min:0',
-            'manufacture_month_year'   => 'required|string',
+            'manufacture_month_year'   => 'nullable|string',   // Removed required
             'body_type'                => 'required|string',
 
-            // NOC
-            'noc_number'               => 'required|string',
-            'noc_issue_date'           => 'required|date',
+            // NOC - Removed required
+            'noc_number'               => 'nullable|string',
+            'noc_issue_date'           => 'nullable|date',
 
             // Insurance
             'insurance_type'           => 'required|string',
             'insurance_company'        => 'required|string',
             'insurance_policy_number'  => 'required|string',
-            'insurance_from_date'      => 'required|date',
-            'insurance_to_date'        => 'required|date',
+            'insurance_from_date'      => 'nullable|date',     // Removed required (was already nullable)
+            'insurance_to_date'        => 'nullable|date',     // Removed required (was already nullable)
 
             // PUCC
             'pucc_number'              => 'required|string',
-            'pucc_form'                => 'required|string',
-            'pucc_upto'                => 'required|date',
+            'pucc_form'                => 'nullable|string',   // Removed required
+            'pucc_upto'                => 'nullable|date',     // Removed required (was already nullable)
 
-            // Permit
-            'permit_number'            => 'required|string',
-            'permit_type'              => 'required|string',
-            'permit_valid_from'        => 'required|date',
-            'permit_valid_upto'        => 'required|date',
+            // Permit - Removed required
+            'permit_number'            => 'nullable|string',
+            'permit_type'              => 'nullable|string',
+            'permit_valid_from'        => 'nullable|date',
+            'permit_valid_upto'        => 'nullable|date',
 
-            // Tax
-            'tax_type'                 => 'required|string',
-            'tax_amount'               => 'required|numeric|min:0',
-            'tax_from'                 => 'required|date',
-            'tax_upto'                 => 'required|date',
+            // Tax - Removed required
+            'tax_type'                 => 'nullable|string',
+            'tax_amount'               => 'nullable|numeric|min:0',
+            'tax_from'                 => 'nullable|date',
+            'tax_upto'                 => 'nullable|date',
 
             // PDF upload
             'document'                 => 'nullable|mimes:pdf|max:2048',

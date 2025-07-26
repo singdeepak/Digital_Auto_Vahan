@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('request_id')->constrained('requests')->onDelete('cascade');
             $table->string('reg_number');
-            $table->string('old_reg_number');
+            $table->string('old_reg_number')->nullable();           // Made nullable
             $table->string('reg_state');
             $table->string('reg_office');
-            $table->date('fitness_valid_upto');
-            $table->date('registration_valid_upto');
+            $table->date('fitness_valid_upto')->nullable();         // Made nullable
+            $table->date('registration_valid_upto')->nullable();    // Made nullable
 
             // Finance Information
             $table->string('financer');
@@ -50,36 +50,36 @@ return new class extends Migration
             $table->string('color');
             $table->integer('wheelbase');
             $table->integer('cubic_capacity');
-            $table->string('manufacture_month_year');
+            $table->string('manufacture_month_year')->nullable();   // Made nullable
             $table->string('body_type');
 
-            // NOC Information
-            $table->string('noc_number');
-            $table->date('noc_issue_date');
+            // NOC Information - Made nullable
+            $table->string('noc_number')->nullable();
+            $table->date('noc_issue_date')->nullable();
 
             // Insurance Information
             $table->string('insurance_type');
             $table->string('insurance_company');
             $table->string('insurance_policy_number');
-            $table->date('insurance_from_date');
-            $table->date('insurance_to_date');
+            $table->date('insurance_from_date')->nullable();        // Made nullable
+            $table->date('insurance_to_date')->nullable();          // Made nullable
 
             // PUCC Information
             $table->string('pucc_number');
-            $table->string('pucc_form');
-            $table->date('pucc_upto');
+            $table->string('pucc_form')->nullable();                // Made nullable
+            $table->date('pucc_upto')->nullable();                  // Made nullable
 
-            // Permit Information
-            $table->string('permit_number');
-            $table->string('permit_type');
-            $table->date('permit_valid_from');
-            $table->date('permit_valid_upto');
+            // Permit Information - Made nullable
+            $table->string('permit_number')->nullable();
+            $table->string('permit_type')->nullable();
+            $table->date('permit_valid_from')->nullable();
+            $table->date('permit_valid_upto')->nullable();
 
-            // Tax Information
-            $table->string('tax_type');
-            $table->decimal('tax_amount', 10, 2);
-            $table->date('tax_from');
-            $table->date('tax_upto');
+            // Tax Information - Made nullable
+            $table->string('tax_type')->nullable();
+            $table->decimal('tax_amount', 10, 2)->nullable();
+            $table->date('tax_from')->nullable();
+            $table->date('tax_upto')->nullable();
 
             // Optional PDF upload
             $table->string('document')->nullable();

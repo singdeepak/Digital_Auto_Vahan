@@ -38,7 +38,7 @@
         @error('password')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
       </div>
       <button type="submit"
-        class="w-full py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition duration-300">
+        class="w-full py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition duration-300 cursor-pointer">
         Log In
       </button>
     </form>
